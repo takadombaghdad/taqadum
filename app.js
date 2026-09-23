@@ -226,8 +226,13 @@ function escapeAttr(str){ return escapeHtml(str); }
 /* ---------- تشغيل ---------- */
 render();
 
+/* تنظيف تلقائي: يشيل أي Service Worker قديم مسجّل من نسخ سابقة
+   ويمسح كل الكاش، حتى ما يعلق أي زائر بنسخة قديمة مخزّنة أبداً. */
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  navigator.serviceWorker.getRegistrations().then(regs=>{
+    regs.forEach(reg=> reg.unregister());
   });
+}
+if(window.caches){
+  caches.keys().then(keys=> keys.forEach(k=> caches.delete(k)));
 }
