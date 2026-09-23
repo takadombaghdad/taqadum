@@ -6,8 +6,10 @@
    ========================================================== */
 const STORE_KEY = 'taqadum_news_v1';
 const AUTH_KEY  = 'taqadum_admin_ok';
+const USER_KEY  = 'taqadum_admin_user';
 const PASS_KEY  = 'taqadum_admin_pass';
-const DEFAULT_PASSWORD = 'taqadum2026';
+const DEFAULT_USERNAME = 'takadom';
+const DEFAULT_PASSWORD = 'Mm664482mm@@';
 
 function loadNews(){
   try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || seedNews(); }
@@ -104,17 +106,25 @@ function renderAdmin(){
     viewEl.innerHTML = `
       <div class="admin-locked">
         <div class="field">
+          <label>اسم المستخدم</label>
+          <input type="text" id="userInput" placeholder="اسم المستخدم" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div class="field">
           <label>كلمة المرور</label>
-          <input type="password" id="passInput" placeholder="أدخل كلمة مرور لوحة التحكم">
+          <input type="password" id="passInput" placeholder="أدخل كلمة مرور لوحة التحكم" autocomplete="current-password">
         </div>
         <button class="btn btn-primary" id="loginBtn" style="width:100%">دخول</button>
-        <p class="hint">كلمة المرور الافتراضية: <strong>${DEFAULT_PASSWORD}</strong> — يفضّل تغييرها من الكود قبل النشر.</p>
       </div>`;
     document.getElementById('loginBtn').addEventListener('click', ()=>{
-      const val = document.getElementById('passInput').value;
-      const saved = localStorage.getItem(PASS_KEY) || DEFAULT_PASSWORD;
-      if(val === saved){ sessionStorage.setItem(AUTH_KEY,'1'); renderAdmin(); }
-      else alert('كلمة المرور غير صحيحة');
+      const userVal = document.getElementById('userInput').value.trim().toLowerCase();
+      const passVal = document.getElementById('passInput').value;
+      const savedUser = (localStorage.getItem(USER_KEY) || DEFAULT_USERNAME).toLowerCase();
+      const savedPass = localStorage.getItem(PASS_KEY) || DEFAULT_PASSWORD;
+      if(userVal === savedUser && passVal === savedPass){
+        sessionStorage.setItem(AUTH_KEY,'1'); renderAdmin();
+      } else {
+        alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+      }
     });
     return;
   }
