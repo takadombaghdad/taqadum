@@ -6,10 +6,14 @@
    ========================================================== */
 const STORE_KEY = 'taqadum_news_v1';
 const AUTH_KEY  = 'taqadum_admin_ok';
-const USER_KEY  = 'taqadum_admin_user';
-const PASS_KEY  = 'taqadum_admin_pass';
-const DEFAULT_USERNAME = 'takadom';
-const DEFAULT_PASSWORD = 'Mm664482mm@@';
+// كلمة المرور مو مخزّنة كنص واضح — هذا هاش (بصمة تشفير) لـ "اسم المستخدم:كلمة المرور"
+// حتى لو فتح أي شخص هذا الملف بـ GitHub، ما يقدر يشوف كلمة المرور الفعلية.
+const CREDENTIALS_HASH = '2819e04cdb0b1574889d670bf0695499894cd4607f141de310ed32a5265053f8';
+
+async function sha256(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 function loadNews(){
   try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || seedNews(); }
@@ -115,12 +119,11 @@ function renderAdmin(){
         </div>
         <button class="btn btn-primary" id="loginBtn" style="width:100%">دخول</button>
       </div>`;
-    document.getElementById('loginBtn').addEventListener('click', ()=>{
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
       const userVal = document.getElementById('userInput').value.trim().toLowerCase();
       const passVal = document.getElementById('passInput').value;
-      const savedUser = (localStorage.getItem(USER_KEY) || DEFAULT_USERNAME).toLowerCase();
-      const savedPass = localStorage.getItem(PASS_KEY) || DEFAULT_PASSWORD;
-      if(userVal === savedUser && passVal === savedPass){
+      const enteredHash = await sha256(userVal + ':' + passVal);
+      if(enteredHash === CREDENTIALS_HASH){
         sessionStorage.setItem(AUTH_KEY,'1'); renderAdmin();
       } else {
         alert('اسم المستخدم أو كلمة المرور غير صحيحة');
