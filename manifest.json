@@ -1,0 +1,16 @@
+{
+  "name": "حزب تقدّم - مكتب العامرية",
+  "short_name": "تقدّم - العامرية",
+  "description": "تطبيق أخبار وبيانات حزب تقدّم - مكتب العامرية",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F6F2",
+  "theme_color": "#D9622B",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    { "src": "icon.png", "sizes": "369x369", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
